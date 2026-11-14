@@ -8,6 +8,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from PIL import Image
+from translate_vi import translate_query
 
 load_dotenv()
 UNSPLASH_KEY = os.getenv("UNSPLASH_ACCESS_KEY", "").strip()
@@ -156,7 +157,8 @@ async def health():
 
 @app.post("/api/search")
 async def search(req: SearchRequest):
-    q = " ".join(req.q.split())
+    q_original = " ".join(req.q.split())
+    q, translated = await translate_query(q_original)
     results, errors = [], {}
     funcs = {
         "unsplash": search_unsplash,
@@ -186,7 +188,7 @@ async def search(req: SearchRequest):
     # True dimension filter. Keep source metadata and do not upscale.
     results = [p for p in results if p.width >= req.min_width and p.height >= req.min_height]
     results.sort(key=lambda p: p.width * p.height, reverse=True)
-    return {"query": q, "count": len(results), "results": results, "warnings": errors,
+    return {"query": q_original, "searched_query": q, "translated": translated, "count": len(results), "results": results, "warnings": errors,
             "quality_rule": f"width >= {req.min_width} AND height >= {req.min_height}"}
 
 def validate_public_https(url: str):

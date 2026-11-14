@@ -3,6 +3,11 @@
 # Dùng lại khi bạn vừa sửa API key trong backend/.env.
 cd "$(dirname "$0")"
 
+# Tự cài thư viện nếu còn thiếu (lần đầu hoặc khi bước cài tự động bị lỗi)
+command -v uvicorn >/dev/null || pip install -r backend/requirements.txt
+[ -d frontend/node_modules ] || (cd frontend && npm install)
+[ -f backend/.env ] || cp backend/.env.example backend/.env
+
 pkill -f "uvicorn app:app" 2>/dev/null
 pkill -f "vite" 2>/dev/null
 sleep 1

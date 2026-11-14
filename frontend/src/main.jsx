@@ -28,7 +28,7 @@ function App() {
       const data=await r.json();
       if(!r.ok) throw new Error(data.detail||"Không thể tìm kiếm");
       setPhotos(data.results||[]); setWarnings(data.warnings||{});
-      setMessage(`Tìm thấy ${data.count||0} ảnh đạt điều kiện kích thước.`);
+      setMessage(`Tìm thấy ${data.count||0} ảnh đạt điều kiện kích thước.`+(data.translated?` Đã tìm bằng từ khóa tiếng Anh: "${data.searched_query}".`:""));
     } catch(err){setMessage("Lỗi: "+err.message);}
     finally{setBusy(false);}
   }
