@@ -1,0 +1,17 @@
+
+:root{font-family:Inter,system-ui,Arial,sans-serif;color:#18212f;background:#f3f5f8;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0}main{max-width:1250px;margin:auto;padding:28px 22px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:24px}.brand{width:48px;height:48px;border-radius:14px;background:#182f55;color:white;display:grid;place-items:center;font-weight:800;font-size:20px}
+h1{font-size:23px;margin:0}header p{margin:4px 0 0;color:#718096}.tag{margin-left:auto;background:#e2eaf6;color:#29466d;padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.panel{background:white;border:1px solid #e2e8f0;border-radius:18px;padding:22px;box-shadow:0 5px 20px #18212f08}
+label{display:block;font-size:13px;font-weight:650;margin-bottom:8px;color:#4b5563}
+.searchrow{display:flex;gap:10px}.searchrow input{flex:1}
+input:not([type=checkbox]){width:100%;border:1px solid #d5dce6;border-radius:10px;padding:12px;font:inherit;min-width:0}
+button{border:0;border-radius:10px;background:#2456a6;color:white;padding:11px 16px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#e9eef6;color:#263b59}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px;margin-top:20px}.checks{display:flex;gap:18px;flex-wrap:wrap}.check,.pick{display:flex;align-items:center;gap:7px;margin:0}.hint,footer{font-size:12px;color:#718096}.status{margin-top:15px;padding:11px 13px;border-radius:9px;background:#edf4ff;color:#234a7e;font-size:14px}.warning{font-size:12px;color:#925b10;margin-top:7px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin:22px 0 14px;gap:12px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.photo{background:white;border:2px solid transparent;border-radius:14px;overflow:hidden;box-shadow:0 3px 14px #18212f0a}.photo.selected{border-color:#3975cf}
+.photo img{width:100%;height:175px;object-fit:cover;background:#e6eaf0;display:block}.photoInfo{padding:12px;display:grid;gap:7px}.photoInfo b{font-size:12px}.photoInfo small{font-size:11px;color:#697586}.photoInfo a{font-size:12px;color:#2456a6;text-decoration:none}
+footer{text-align:center;padding:30px 0}
+@media(max-width:700px){main{padding:16px 12px}.filters{grid-template-columns:1fr}.searchrow{flex-direction:column}.toolbar{align-items:flex-start;flex-direction:column}h1{font-size:18px}}
