@@ -56,13 +56,27 @@ function App() {
   async function download() {
     const chosen=photos.filter(p=>selected.includes(p.provider+":"+p.id));
     if(!chosen.length) return setMessage("Hãy chọn ít nhất một ảnh.");
-    setBusy(true); setMessage("Đang tạo ZIP. Vui lòng chờ...");
+    // Backend nhận tối đa 20 ảnh mỗi ZIP, nên chia thành nhiều ZIP (mỗi ZIP 15 ảnh).
+    const SIZE=15, parts=[];
+    for(let i=0;i<chosen.length;i+=SIZE) parts.push(chosen.slice(i,i+SIZE));
+    setBusy(true);
     try {
-      const r=await fetch("/api/download-zip",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({photos:chosen})});
-      if(!r.ok) { const d=await r.json(); throw new Error(d.detail||"Tải ZIP thất bại"); }
-      const blob=await r.blob(), url=URL.createObjectURL(blob), a=document.createElement("a");
-      a.href=url; a.download="steven-images.zip"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-      setMessage("Đã tạo file ZIP. Kiểm tra thư mục Downloads và SOURCE_AND_LICENSES.txt.");
+      for(let n=0;n<parts.length;n++){
+        setMessage(`Đang tạo ZIP ${n+1}/${parts.length}. Vui lòng chờ...`);
+        const r=await fetch("/api/download-zip",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({photos:parts[n]})});
+        if(!r.ok) {
+          let msg="Tải ZIP thất bại ("+r.status+")";
+          try{ const d=await r.json(); if(typeof d.detail==="string") msg=d.detail; else if(Array.isArray(d.detail)) msg="Dữ liệu ảnh không hợp lệ: "+d.detail.map(x=>x.msg).join("; "); }catch(_){}
+          throw new Error(msg);
+        }
+        const fileName=parts.length===1?"steven-images.zip":`steven-images-${n+1}.zip`;
+        const blob=await r.blob(), url=URL.createObjectURL(blob), a=document.createElement("a");
+        a.href=url; a.download=fileName; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        await new Promise(res=>setTimeout(res,600));
+      }
+      setMessage(parts.length===1
+        ? "Đã tạo file ZIP. Kiểm tra thư mục Downloads và SOURCE_AND_LICENSES.txt."
+        : `Đã tạo ${parts.length} file ZIP (steven-images-1.zip ...). Nếu trình duyệt hỏi, hãy cho phép tải nhiều tệp. Kiểm tra thư mục Downloads.`);
     } catch(err){setMessage("Lỗi tải: "+err.message);}
     finally{setBusy(false);}
   }
